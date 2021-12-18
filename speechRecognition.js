@@ -1,9 +1,9 @@
 //generating a text file
-function generateTxtFile(text){
+function generateTxtFile(text) {
     var textFile = null;
-    var data = new Blob([text], {type: 'text/plain'});
+    var data = new Blob([text], { type: 'text/plain' });
 
-    if(textFile !== null){
+    if (textFile !== null) {
         window.URL.revokeObjectURL(textFile);
     }
 
@@ -12,10 +12,11 @@ function generateTxtFile(text){
     return textFile;
 }
 
-function create(){
+function create() {
     Swal.fire({
-        title: "Great! You have downloaded the file!",
-        text: "This file can be found in your downloads folder",
+        title: "Great!",
+        text: "Enter the name of the file you want to save it as:",
+        input: 'text',
         type: "success",
         confirmButtonText: "Awesome!",
         timer: 3000,
@@ -29,13 +30,13 @@ function create(){
     });
     text = document.getElementById('script').textContent;
     var link = document.createElement('a');
-    link.href = generateTxtFile(text);          
-    link.download = 'script.txt';
+    link.href = generateTxtFile(text);
+    link.download = 'note.txt';
     link.click();
-    
+
 }
 
-if("webkitSpeechRecognition" in window){
+if ("webkitSpeechRecognition" in window) {
     let recognition = new webkitSpeechRecognition();
     let finalTranscript = '';
     recognition.continuous = true;
@@ -56,15 +57,12 @@ if("webkitSpeechRecognition" in window){
         console.log("Speech Recognition Ended");
     };
 
-    recognition.onresult = (event) => {
-        for (let i = event.resultIndex; i < event.results.length; ++i) {
-            if (event.results[i].isFinal) {
-              finalTranscript += event.results[i][0].transcript + ". ";
-            }
-        }
-        document.querySelector("#script").innerHTML = finalTranscript;
+    recognition.onresult = function (event) {
+        finalTranscript = event.results[0][0].transcript + ". ";
+
+        document.querySelector("#script").innerHTML += finalTranscript;
     }
-    
+
     document.querySelector("#start").onclick = () => {
         recognition.start();
     };
@@ -82,6 +80,6 @@ if("webkitSpeechRecognition" in window){
         navigator.clipboard.writeText(text);
         alert("Copied the text: " + text);
     }
-}else {
+} else {
     console.log("Speech Recognition Not Available");
 }
